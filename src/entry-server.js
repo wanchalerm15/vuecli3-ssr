@@ -1,8 +1,25 @@
 import { createApp } from './main';
-const { app, router } = createApp();
+const { app, router, store } = createApp();
 export default context => {
-    router.push(context.url);
     return new Promise((resolve, reject) => {
-        resolve(app);
+        router.push(context.url);
+
+        router.onReady(() => {
+            const matchedComponents = router.getMatchedComponents();
+            if (!matchedComponents.length) return reject({ code: 404 });
+
+            Promise.all(matchedComponents.map(Component => {
+                if (Component.asyncData) {
+                    return Component.asyncData({
+                        store,
+                        route: router.currentRoute
+                    });
+                }
+            })).then(() => {
+                context.state = store.state;
+                resolve(app);
+            }).catch(reject);
+
+        }, reject);
     });
 }

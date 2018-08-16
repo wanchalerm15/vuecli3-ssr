@@ -2,8 +2,8 @@ const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 let configBuilder = {};
-switch (process.env.ENV_TARGET) {
-    case 'node':
+switch (process.env.ENV_BUILD) {
+    case 'server':
         configBuilder = {
             configureWebpack: {
                 entry: './src/entry-server.js',
@@ -15,14 +15,17 @@ switch (process.env.ENV_TARGET) {
                 externals: nodeExternals({
                     whitelist: /\.css$/
                 }),
+                optimization: undefined,
                 plugins: [
                     new VueSSRServerPlugin()
                 ]
             }
         };
         break;
+
     default:
         configBuilder = {
+            indexPath: 'index.template.html',
             configureWebpack: {
                 entry: './src/entry-client.js'
             }

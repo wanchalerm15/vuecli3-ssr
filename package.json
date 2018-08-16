@@ -6,11 +6,12 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "vue-cli-service build",
-    "build:server": "cross-env ENV_TARGET=node vue-cli-service build --no-clean",
+    "build:client": "cross-env ENV_BUILD=client vue-cli-service build",
+    "build:server": "cross-env ENV_BUILD=server vue-cli-service build --no-clean",
     "start": "nodemon"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "express": "^4.16.3",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
